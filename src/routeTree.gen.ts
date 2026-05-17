@@ -11,7 +11,17 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AppSettingsRouteImport } from './routes/_app.settings'
+import { Route as AppReportsRouteImport } from './routes/_app.reports'
+import { Route as AppMonitoringRouteImport } from './routes/_app.monitoring'
+import { Route as AppMlRouteImport } from './routes/_app.ml'
+import { Route as AppDatasetsRouteImport } from './routes/_app.datasets'
+import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
+import { Route as AppCustomersRouteImport } from './routes/_app.customers'
+import { Route as AppAnalyticsRouteImport } from './routes/_app.analytics'
+import { Route as AppAlertsRouteImport } from './routes/_app.alerts'
 
 const RegisterRoute = RegisterRouteImport.update({
   id: '/register',
@@ -23,38 +33,154 @@ const LoginRoute = LoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppRoute = AppRouteImport.update({
+  id: '/_app',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AppSettingsRoute = AppSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppReportsRoute = AppReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppMonitoringRoute = AppMonitoringRouteImport.update({
+  id: '/monitoring',
+  path: '/monitoring',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppMlRoute = AppMlRouteImport.update({
+  id: '/ml',
+  path: '/ml',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppDatasetsRoute = AppDatasetsRouteImport.update({
+  id: '/datasets',
+  path: '/datasets',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppDashboardRoute = AppDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppCustomersRoute = AppCustomersRouteImport.update({
+  id: '/customers',
+  path: '/customers',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAnalyticsRoute = AppAnalyticsRouteImport.update({
+  id: '/analytics',
+  path: '/analytics',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAlertsRoute = AppAlertsRouteImport.update({
+  id: '/alerts',
+  path: '/alerts',
+  getParentRoute: () => AppRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
+  '/alerts': typeof AppAlertsRoute
+  '/analytics': typeof AppAnalyticsRoute
+  '/customers': typeof AppCustomersRoute
+  '/dashboard': typeof AppDashboardRoute
+  '/datasets': typeof AppDatasetsRoute
+  '/ml': typeof AppMlRoute
+  '/monitoring': typeof AppMonitoringRoute
+  '/reports': typeof AppReportsRoute
+  '/settings': typeof AppSettingsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
+  '/alerts': typeof AppAlertsRoute
+  '/analytics': typeof AppAnalyticsRoute
+  '/customers': typeof AppCustomersRoute
+  '/dashboard': typeof AppDashboardRoute
+  '/datasets': typeof AppDatasetsRoute
+  '/ml': typeof AppMlRoute
+  '/monitoring': typeof AppMonitoringRoute
+  '/reports': typeof AppReportsRoute
+  '/settings': typeof AppSettingsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_app': typeof AppRouteWithChildren
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
+  '/_app/alerts': typeof AppAlertsRoute
+  '/_app/analytics': typeof AppAnalyticsRoute
+  '/_app/customers': typeof AppCustomersRoute
+  '/_app/dashboard': typeof AppDashboardRoute
+  '/_app/datasets': typeof AppDatasetsRoute
+  '/_app/ml': typeof AppMlRoute
+  '/_app/monitoring': typeof AppMonitoringRoute
+  '/_app/reports': typeof AppReportsRoute
+  '/_app/settings': typeof AppSettingsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/register'
+  fullPaths:
+    | '/'
+    | '/login'
+    | '/register'
+    | '/alerts'
+    | '/analytics'
+    | '/customers'
+    | '/dashboard'
+    | '/datasets'
+    | '/ml'
+    | '/monitoring'
+    | '/reports'
+    | '/settings'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/register'
-  id: '__root__' | '/' | '/login' | '/register'
+  to:
+    | '/'
+    | '/login'
+    | '/register'
+    | '/alerts'
+    | '/analytics'
+    | '/customers'
+    | '/dashboard'
+    | '/datasets'
+    | '/ml'
+    | '/monitoring'
+    | '/reports'
+    | '/settings'
+  id:
+    | '__root__'
+    | '/'
+    | '/_app'
+    | '/login'
+    | '/register'
+    | '/_app/alerts'
+    | '/_app/analytics'
+    | '/_app/customers'
+    | '/_app/dashboard'
+    | '/_app/datasets'
+    | '/_app/ml'
+    | '/_app/monitoring'
+    | '/_app/reports'
+    | '/_app/settings'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AppRoute: typeof AppRouteWithChildren
   LoginRoute: typeof LoginRoute
   RegisterRoute: typeof RegisterRoute
 }
@@ -75,6 +201,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_app': {
+      id: '/_app'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -82,11 +215,101 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_app/settings': {
+      id: '/_app/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof AppSettingsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/reports': {
+      id: '/_app/reports'
+      path: '/reports'
+      fullPath: '/reports'
+      preLoaderRoute: typeof AppReportsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/monitoring': {
+      id: '/_app/monitoring'
+      path: '/monitoring'
+      fullPath: '/monitoring'
+      preLoaderRoute: typeof AppMonitoringRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/ml': {
+      id: '/_app/ml'
+      path: '/ml'
+      fullPath: '/ml'
+      preLoaderRoute: typeof AppMlRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/datasets': {
+      id: '/_app/datasets'
+      path: '/datasets'
+      fullPath: '/datasets'
+      preLoaderRoute: typeof AppDatasetsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/dashboard': {
+      id: '/_app/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AppDashboardRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/customers': {
+      id: '/_app/customers'
+      path: '/customers'
+      fullPath: '/customers'
+      preLoaderRoute: typeof AppCustomersRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/analytics': {
+      id: '/_app/analytics'
+      path: '/analytics'
+      fullPath: '/analytics'
+      preLoaderRoute: typeof AppAnalyticsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/alerts': {
+      id: '/_app/alerts'
+      path: '/alerts'
+      fullPath: '/alerts'
+      preLoaderRoute: typeof AppAlertsRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
+interface AppRouteChildren {
+  AppAlertsRoute: typeof AppAlertsRoute
+  AppAnalyticsRoute: typeof AppAnalyticsRoute
+  AppCustomersRoute: typeof AppCustomersRoute
+  AppDashboardRoute: typeof AppDashboardRoute
+  AppDatasetsRoute: typeof AppDatasetsRoute
+  AppMlRoute: typeof AppMlRoute
+  AppMonitoringRoute: typeof AppMonitoringRoute
+  AppReportsRoute: typeof AppReportsRoute
+  AppSettingsRoute: typeof AppSettingsRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppAlertsRoute: AppAlertsRoute,
+  AppAnalyticsRoute: AppAnalyticsRoute,
+  AppCustomersRoute: AppCustomersRoute,
+  AppDashboardRoute: AppDashboardRoute,
+  AppDatasetsRoute: AppDatasetsRoute,
+  AppMlRoute: AppMlRoute,
+  AppMonitoringRoute: AppMonitoringRoute,
+  AppReportsRoute: AppReportsRoute,
+  AppSettingsRoute: AppSettingsRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AppRoute: AppRouteWithChildren,
   LoginRoute: LoginRoute,
   RegisterRoute: RegisterRoute,
 }
