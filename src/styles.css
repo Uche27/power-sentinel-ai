@@ -80,11 +80,7 @@
   --chart-4: oklch(0.6 0.24 27);
   --chart-5: oklch(0.5 0.18 290);
 
-  --gradient-hero: linear-gradient(135deg, oklch(0.22 0.06 255) 0%, oklch(0.32 0.14 255) 50%, oklch(0.55 0.21 250) 100%);
-  --gradient-accent: linear-gradient(135deg, oklch(0.55 0.21 250), oklch(0.72 0.18 50));
-  --gradient-card: linear-gradient(160deg, oklch(1 0 0) 0%, oklch(0.97 0.01 250) 100%);
-  --glow-primary: 0 0 40px oklch(0.55 0.21 250 / 0.35);
-  --shadow-elegant: 0 12px 40px -10px oklch(0.22 0.06 255 / 0.25);
+  --shadow-elegant: 0 4px 16px -6px oklch(0.22 0.06 255 / 0.18);
 
   --sidebar: oklch(0.18 0.04 255);
   --sidebar-foreground: oklch(0.95 0.01 250);
