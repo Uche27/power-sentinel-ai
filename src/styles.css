@@ -80,11 +80,7 @@
   --chart-4: oklch(0.6 0.24 27);
   --chart-5: oklch(0.5 0.18 290);
 
-  --gradient-hero: linear-gradient(135deg, oklch(0.22 0.06 255) 0%, oklch(0.32 0.14 255) 50%, oklch(0.55 0.21 250) 100%);
-  --gradient-accent: linear-gradient(135deg, oklch(0.55 0.21 250), oklch(0.72 0.18 50));
-  --gradient-card: linear-gradient(160deg, oklch(1 0 0) 0%, oklch(0.97 0.01 250) 100%);
-  --glow-primary: 0 0 40px oklch(0.55 0.21 250 / 0.35);
-  --shadow-elegant: 0 12px 40px -10px oklch(0.22 0.06 255 / 0.25);
+  --shadow-elegant: 0 4px 16px -6px oklch(0.22 0.06 255 / 0.18);
 
   --sidebar: oklch(0.18 0.04 255);
   --sidebar-foreground: oklch(0.95 0.01 250);
@@ -120,7 +116,7 @@
   --border: oklch(0.3 0.04 255);
   --input: oklch(0.3 0.04 255);
   --ring: oklch(0.68 0.2 250);
-  --gradient-card: linear-gradient(160deg, oklch(0.22 0.04 255) 0%, oklch(0.18 0.04 255) 100%);
+  
   --sidebar: oklch(0.12 0.03 255);
   --sidebar-foreground: oklch(0.95 0.01 250);
   --sidebar-accent: oklch(0.2 0.04 255);
@@ -137,36 +133,20 @@
 }
 
 @layer utilities {
-  .bg-gradient-hero { background: var(--gradient-hero); }
-  .bg-gradient-accent { background: var(--gradient-accent); }
-  .bg-gradient-card { background: var(--gradient-card); }
-  .glow-primary { box-shadow: var(--glow-primary); }
+  .bg-gradient-hero { background-color: var(--color-secondary); }
+  .bg-gradient-accent { background-color: var(--color-primary); }
+  .bg-gradient-card { background-color: var(--color-card); }
+  .glow-primary { box-shadow: none; }
   .shadow-elegant { box-shadow: var(--shadow-elegant); }
   .glass {
-    background: color-mix(in oklab, var(--card) 70%, transparent);
-    backdrop-filter: blur(12px);
-    border: 1px solid color-mix(in oklab, var(--border) 60%, transparent);
+    background-color: var(--color-card);
+    border: 1px solid var(--color-border);
   }
-  .text-gradient {
-    background: var(--gradient-accent);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
-  @keyframes grid-pan {
-    0% { background-position: 0 0; }
-    100% { background-position: 60px 60px; }
-  }
-  .bg-grid {
-    background-image:
-      linear-gradient(to right, oklch(1 0 0 / 0.06) 1px, transparent 1px),
-      linear-gradient(to bottom, oklch(1 0 0 / 0.06) 1px, transparent 1px);
-    background-size: 60px 60px;
-    animation: grid-pan 30s linear infinite;
-  }
+  .text-gradient { color: var(--color-primary); }
+  .bg-grid { background-image: none; }
   @keyframes pulse-ring {
     0% { box-shadow: 0 0 0 0 oklch(0.6 0.24 27 / 0.5); }
-    70% { box-shadow: 0 0 0 14px oklch(0.6 0.24 27 / 0); }
+    70% { box-shadow: 0 0 0 12px oklch(0.6 0.24 27 / 0); }
     100% { box-shadow: 0 0 0 0 oklch(0.6 0.24 27 / 0); }
   }
   .pulse-ring { animation: pulse-ring 1.8s infinite; }
