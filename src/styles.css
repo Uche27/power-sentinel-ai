@@ -116,7 +116,7 @@
   --border: oklch(0.3 0.04 255);
   --input: oklch(0.3 0.04 255);
   --ring: oklch(0.68 0.2 250);
-  --gradient-card: linear-gradient(160deg, oklch(0.22 0.04 255) 0%, oklch(0.18 0.04 255) 100%);
+  
   --sidebar: oklch(0.12 0.03 255);
   --sidebar-foreground: oklch(0.95 0.01 250);
   --sidebar-accent: oklch(0.2 0.04 255);
