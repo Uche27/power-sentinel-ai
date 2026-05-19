@@ -96,7 +96,7 @@ function Datasets() {
       const previewRows = clean.slice(0, 100).map((data, row_index) => ({
         dataset_id: inserted.id,
         row_index,
-        data,
+        data: data as unknown as never,
       }));
       if (previewRows.length) {
         const { error: rowErr } = await supabase.from("dataset_rows").insert(previewRows);
