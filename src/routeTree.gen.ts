@@ -15,8 +15,12 @@ import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppSettingsRouteImport } from './routes/_app.settings'
 import { Route as AppReportsRouteImport } from './routes/_app.reports'
+import { Route as AppReportSuspiciousRouteImport } from './routes/_app.report-suspicious'
+import { Route as AppMyActivityRouteImport } from './routes/_app.my-activity'
 import { Route as AppMonitoringRouteImport } from './routes/_app.monitoring'
 import { Route as AppMlRouteImport } from './routes/_app.ml'
+import { Route as AppInspectionsRouteImport } from './routes/_app.inspections'
+import { Route as AppHistoryRouteImport } from './routes/_app.history'
 import { Route as AppDatasetsRouteImport } from './routes/_app.datasets'
 import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
 import { Route as AppCustomersRouteImport } from './routes/_app.customers'
@@ -52,6 +56,16 @@ const AppReportsRoute = AppReportsRouteImport.update({
   path: '/reports',
   getParentRoute: () => AppRoute,
 } as any)
+const AppReportSuspiciousRoute = AppReportSuspiciousRouteImport.update({
+  id: '/report-suspicious',
+  path: '/report-suspicious',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppMyActivityRoute = AppMyActivityRouteImport.update({
+  id: '/my-activity',
+  path: '/my-activity',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppMonitoringRoute = AppMonitoringRouteImport.update({
   id: '/monitoring',
   path: '/monitoring',
@@ -60,6 +74,16 @@ const AppMonitoringRoute = AppMonitoringRouteImport.update({
 const AppMlRoute = AppMlRouteImport.update({
   id: '/ml',
   path: '/ml',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppInspectionsRoute = AppInspectionsRouteImport.update({
+  id: '/inspections',
+  path: '/inspections',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppHistoryRoute = AppHistoryRouteImport.update({
+  id: '/history',
+  path: '/history',
   getParentRoute: () => AppRoute,
 } as any)
 const AppDatasetsRoute = AppDatasetsRouteImport.update({
@@ -97,8 +121,12 @@ export interface FileRoutesByFullPath {
   '/customers': typeof AppCustomersRoute
   '/dashboard': typeof AppDashboardRoute
   '/datasets': typeof AppDatasetsRoute
+  '/history': typeof AppHistoryRoute
+  '/inspections': typeof AppInspectionsRoute
   '/ml': typeof AppMlRoute
   '/monitoring': typeof AppMonitoringRoute
+  '/my-activity': typeof AppMyActivityRoute
+  '/report-suspicious': typeof AppReportSuspiciousRoute
   '/reports': typeof AppReportsRoute
   '/settings': typeof AppSettingsRoute
 }
@@ -111,8 +139,12 @@ export interface FileRoutesByTo {
   '/customers': typeof AppCustomersRoute
   '/dashboard': typeof AppDashboardRoute
   '/datasets': typeof AppDatasetsRoute
+  '/history': typeof AppHistoryRoute
+  '/inspections': typeof AppInspectionsRoute
   '/ml': typeof AppMlRoute
   '/monitoring': typeof AppMonitoringRoute
+  '/my-activity': typeof AppMyActivityRoute
+  '/report-suspicious': typeof AppReportSuspiciousRoute
   '/reports': typeof AppReportsRoute
   '/settings': typeof AppSettingsRoute
 }
@@ -127,8 +159,12 @@ export interface FileRoutesById {
   '/_app/customers': typeof AppCustomersRoute
   '/_app/dashboard': typeof AppDashboardRoute
   '/_app/datasets': typeof AppDatasetsRoute
+  '/_app/history': typeof AppHistoryRoute
+  '/_app/inspections': typeof AppInspectionsRoute
   '/_app/ml': typeof AppMlRoute
   '/_app/monitoring': typeof AppMonitoringRoute
+  '/_app/my-activity': typeof AppMyActivityRoute
+  '/_app/report-suspicious': typeof AppReportSuspiciousRoute
   '/_app/reports': typeof AppReportsRoute
   '/_app/settings': typeof AppSettingsRoute
 }
@@ -143,8 +179,12 @@ export interface FileRouteTypes {
     | '/customers'
     | '/dashboard'
     | '/datasets'
+    | '/history'
+    | '/inspections'
     | '/ml'
     | '/monitoring'
+    | '/my-activity'
+    | '/report-suspicious'
     | '/reports'
     | '/settings'
   fileRoutesByTo: FileRoutesByTo
@@ -157,8 +197,12 @@ export interface FileRouteTypes {
     | '/customers'
     | '/dashboard'
     | '/datasets'
+    | '/history'
+    | '/inspections'
     | '/ml'
     | '/monitoring'
+    | '/my-activity'
+    | '/report-suspicious'
     | '/reports'
     | '/settings'
   id:
@@ -172,8 +216,12 @@ export interface FileRouteTypes {
     | '/_app/customers'
     | '/_app/dashboard'
     | '/_app/datasets'
+    | '/_app/history'
+    | '/_app/inspections'
     | '/_app/ml'
     | '/_app/monitoring'
+    | '/_app/my-activity'
+    | '/_app/report-suspicious'
     | '/_app/reports'
     | '/_app/settings'
   fileRoutesById: FileRoutesById
@@ -229,6 +277,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppReportsRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/report-suspicious': {
+      id: '/_app/report-suspicious'
+      path: '/report-suspicious'
+      fullPath: '/report-suspicious'
+      preLoaderRoute: typeof AppReportSuspiciousRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/my-activity': {
+      id: '/_app/my-activity'
+      path: '/my-activity'
+      fullPath: '/my-activity'
+      preLoaderRoute: typeof AppMyActivityRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/monitoring': {
       id: '/_app/monitoring'
       path: '/monitoring'
@@ -241,6 +303,20 @@ declare module '@tanstack/react-router' {
       path: '/ml'
       fullPath: '/ml'
       preLoaderRoute: typeof AppMlRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/inspections': {
+      id: '/_app/inspections'
+      path: '/inspections'
+      fullPath: '/inspections'
+      preLoaderRoute: typeof AppInspectionsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/history': {
+      id: '/_app/history'
+      path: '/history'
+      fullPath: '/history'
+      preLoaderRoute: typeof AppHistoryRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/datasets': {
@@ -287,8 +363,12 @@ interface AppRouteChildren {
   AppCustomersRoute: typeof AppCustomersRoute
   AppDashboardRoute: typeof AppDashboardRoute
   AppDatasetsRoute: typeof AppDatasetsRoute
+  AppHistoryRoute: typeof AppHistoryRoute
+  AppInspectionsRoute: typeof AppInspectionsRoute
   AppMlRoute: typeof AppMlRoute
   AppMonitoringRoute: typeof AppMonitoringRoute
+  AppMyActivityRoute: typeof AppMyActivityRoute
+  AppReportSuspiciousRoute: typeof AppReportSuspiciousRoute
   AppReportsRoute: typeof AppReportsRoute
   AppSettingsRoute: typeof AppSettingsRoute
 }
@@ -299,8 +379,12 @@ const AppRouteChildren: AppRouteChildren = {
   AppCustomersRoute: AppCustomersRoute,
   AppDashboardRoute: AppDashboardRoute,
   AppDatasetsRoute: AppDatasetsRoute,
+  AppHistoryRoute: AppHistoryRoute,
+  AppInspectionsRoute: AppInspectionsRoute,
   AppMlRoute: AppMlRoute,
   AppMonitoringRoute: AppMonitoringRoute,
+  AppMyActivityRoute: AppMyActivityRoute,
+  AppReportSuspiciousRoute: AppReportSuspiciousRoute,
   AppReportsRoute: AppReportsRoute,
   AppSettingsRoute: AppSettingsRoute,
 }
