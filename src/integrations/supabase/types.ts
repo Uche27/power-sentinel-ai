@@ -14,16 +14,300 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      dataset_rows: {
+        Row: {
+          data: Json
+          dataset_id: string
+          id: string
+          row_index: number
+        }
+        Insert: {
+          data: Json
+          dataset_id: string
+          id?: string
+          row_index: number
+        }
+        Update: {
+          data?: Json
+          dataset_id?: string
+          id?: string
+          row_index?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dataset_rows_dataset_id_fkey"
+            columns: ["dataset_id"]
+            isOneToOne: false
+            referencedRelation: "datasets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      datasets: {
+        Row: {
+          columns: Json
+          columns_count: number
+          created_at: string
+          file_path: string | null
+          id: string
+          name: string
+          rows_count: number
+          size_bytes: number
+          uploaded_by: string
+        }
+        Insert: {
+          columns?: Json
+          columns_count?: number
+          created_at?: string
+          file_path?: string | null
+          id?: string
+          name: string
+          rows_count?: number
+          size_bytes?: number
+          uploaded_by: string
+        }
+        Update: {
+          columns?: Json
+          columns_count?: number
+          created_at?: string
+          file_path?: string | null
+          id?: string
+          name?: string
+          rows_count?: number
+          size_bytes?: number
+          uploaded_by?: string
+        }
+        Relationships: []
+      }
+      field_inspections: {
+        Row: {
+          action_taken: string
+          created_at: string
+          customer_name: string
+          findings: string
+          id: string
+          inspector_id: string
+          location: string
+          meter_no: string
+          outcome: string
+          report_id: string | null
+        }
+        Insert: {
+          action_taken: string
+          created_at?: string
+          customer_name: string
+          findings: string
+          id?: string
+          inspector_id: string
+          location: string
+          meter_no: string
+          outcome?: string
+          report_id?: string | null
+        }
+        Update: {
+          action_taken?: string
+          created_at?: string
+          customer_name?: string
+          findings?: string
+          id?: string
+          inspector_id?: string
+          location?: string
+          meter_no?: string
+          outcome?: string
+          report_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "field_inspections_report_id_fkey"
+            columns: ["report_id"]
+            isOneToOne: false
+            referencedRelation: "suspicious_reports"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      generated_reports: {
+        Row: {
+          created_at: string
+          format: string
+          generated_by: string
+          id: string
+          report_type: string
+          size_bytes: number
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          format: string
+          generated_by: string
+          id?: string
+          report_type: string
+          size_bytes?: number
+          title: string
+        }
+        Update: {
+          created_at?: string
+          format?: string
+          generated_by?: string
+          id?: string
+          report_type?: string
+          size_bytes?: number
+          title?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          email: string
+          full_name: string
+          id: string
+          phone: string | null
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          full_name: string
+          id: string
+          phone?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          full_name?: string
+          id?: string
+          phone?: string | null
+        }
+        Relationships: []
+      }
+      suspicious_reports: {
+        Row: {
+          created_at: string
+          customer_name: string
+          description: string
+          disco: string | null
+          id: string
+          location: string
+          meter_no: string
+          reported_by: string
+          severity: string
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          customer_name: string
+          description: string
+          disco?: string | null
+          id?: string
+          location: string
+          meter_no: string
+          reported_by: string
+          severity?: string
+          status?: string
+        }
+        Update: {
+          created_at?: string
+          customer_name?: string
+          description?: string
+          disco?: string | null
+          id?: string
+          location?: string
+          meter_no?: string
+          reported_by?: string
+          severity?: string
+          status?: string
+        }
+        Relationships: []
+      }
+      trained_models: {
+        Row: {
+          accuracy: number
+          algorithm: string
+          created_at: string
+          created_by: string
+          curve: Json
+          dataset_id: string | null
+          f1: number
+          id: string
+          name: string
+          params: Json
+          precision: number
+          recall: number
+          training_time: string | null
+        }
+        Insert: {
+          accuracy: number
+          algorithm: string
+          created_at?: string
+          created_by: string
+          curve?: Json
+          dataset_id?: string | null
+          f1: number
+          id?: string
+          name: string
+          params?: Json
+          precision: number
+          recall: number
+          training_time?: string | null
+        }
+        Update: {
+          accuracy?: number
+          algorithm?: string
+          created_at?: string
+          created_by?: string
+          curve?: Json
+          dataset_id?: string | null
+          f1?: number
+          id?: string
+          name?: string
+          params?: Json
+          precision?: number
+          recall?: number
+          training_time?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "trained_models_dataset_id_fkey"
+            columns: ["dataset_id"]
+            isOneToOne: false
+            referencedRelation: "datasets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "utility_staff"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +434,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "utility_staff"],
+    },
   },
 } as const
