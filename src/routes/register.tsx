@@ -4,58 +4,70 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Zap } from "lucide-react";
+import { Zap, Loader2 } from "lucide-react";
 import { useState } from "react";
-import { setUser, type User } from "@/lib/auth";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/register")({
   head: () => ({ meta: [{ title: "Register — ElectraGuard.AI" }] }),
   component: RegisterPage,
 });
 
+type Role = "admin" | "utility_staff";
+
 function RegisterPage() {
   const nav = useNavigate();
+  const [busy, setBusy] = useState(false);
   const [form, setForm] = useState({
-    name: "", email: "", phone: "", role: "Analyst" as User["role"], pwd: "", confirm: "",
+    name: "", email: "", phone: "", role: "utility_staff" as Role, pwd: "", confirm: "",
   });
 
   function update<K extends keyof typeof form>(k: K, v: (typeof form)[K]) {
     setForm((f) => ({ ...f, [k]: v }));
   }
 
-  function onSubmit(e: React.FormEvent) {
+  async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!form.name || !form.email.includes("@") || form.pwd.length < 6) {
-      toast.error("Fill in all fields. Password must be at least 6 characters.");
+      toast.error("Fill all fields. Password must be at least 6 characters.");
       return;
     }
     if (form.pwd !== form.confirm) {
       toast.error("Passwords do not match.");
       return;
     }
-    setUser({ name: form.name, email: form.email, role: form.role });
-    toast.success("Account created. Welcome to ElectraGuard.AI!");
-    nav({ to: "/dashboard" });
+    setBusy(true);
+    const { error } = await supabase.auth.signUp({
+      email: form.email,
+      password: form.pwd,
+      options: {
+        emailRedirectTo: `${window.location.origin}/login`,
+        data: { full_name: form.name, phone: form.phone, role: form.role },
+      },
+    });
+    setBusy(false);
+    if (error) { toast.error(error.message); return; }
+    toast.success("Account created. Check your email to confirm, then sign in.");
+    nav({ to: "/login" });
   }
 
   return (
     <div className="min-h-screen grid lg:grid-cols-2 bg-background">
-      <div className="hidden lg:flex flex-col justify-between p-12 bg-gradient-hero text-white relative overflow-hidden">
-        <div className="absolute inset-0 bg-grid opacity-30" />
-        <Link to="/" className="flex items-center gap-2 relative">
-          <div className="size-9 rounded-lg bg-gradient-accent grid place-items-center"><Zap className="size-5" /></div>
+      <div className="hidden lg:flex flex-col justify-between p-12 bg-secondary text-secondary-foreground">
+        <Link to="/" className="flex items-center gap-2">
+          <div className="size-9 rounded-lg bg-primary grid place-items-center"><Zap className="size-5 text-primary-foreground" /></div>
           <span className="font-bold">ElectraGuard.AI</span>
         </Link>
-        <div className="relative">
+        <div>
           <h2 className="text-3xl font-bold leading-snug">Join the fight against electricity theft.</h2>
-          <p className="text-white/70 mt-3 max-w-md">Get role-based access to AI dashboards, fraud reports and live alerts across Nigerian DISCOs.</p>
+          <p className="opacity-70 mt-3 max-w-md">Role-based access to AI dashboards, fraud reports and live alerts across Nigerian DISCOs.</p>
         </div>
-        <p className="text-xs text-white/50 relative">© ElectraGuard.AI</p>
+        <p className="text-xs opacity-50">© ElectraGuard.AI</p>
       </div>
 
       <div className="flex items-center justify-center p-6">
-        <Card className="w-full max-w-md p-8 bg-gradient-card shadow-elegant">
+        <Card className="w-full max-w-md p-8">
           <h1 className="text-2xl font-bold">Create your account</h1>
           <p className="text-sm text-muted-foreground mt-1">Register to access the platform</p>
           <form onSubmit={onSubmit} className="mt-6 space-y-3">
@@ -74,15 +86,17 @@ function RegisterPage() {
               </div>
             </div>
             <div className="space-y-1.5">
-              <Label>Role</Label>
-              <Select value={form.role} onValueChange={(v) => update("role", v as User["role"])}>
+              <Label>Account type</Label>
+              <Select value={form.role} onValueChange={(v) => update("role", v as Role)}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="Admin">Admin</SelectItem>
-                  <SelectItem value="Analyst">Analyst</SelectItem>
-                  <SelectItem value="Utility Staff">Utility Staff</SelectItem>
+                  <SelectItem value="admin">Admin</SelectItem>
+                  <SelectItem value="utility_staff">Utility Staff</SelectItem>
                 </SelectContent>
               </Select>
+              <p className="text-[11px] text-muted-foreground">
+                Admins manage datasets, ML models and reports. Utility Staff submit field reports and inspections.
+              </p>
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
@@ -94,7 +108,9 @@ function RegisterPage() {
                 <Input id="confirm" type="password" value={form.confirm} onChange={(e) => update("confirm", e.target.value)} />
               </div>
             </div>
-            <Button type="submit" className="w-full bg-gradient-accent text-white border-0 mt-2">Create account</Button>
+            <Button type="submit" disabled={busy} className="w-full mt-2">
+              {busy && <Loader2 className="size-4 mr-1 animate-spin" />} Create account
+            </Button>
           </form>
           <p className="text-sm text-center text-muted-foreground mt-6">
             Already have an account? <Link to="/login" className="text-primary hover:underline">Sign in</Link>
