@@ -5,8 +5,8 @@ import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
-import { getUser } from "@/lib/auth";
-import { useEffect, useState } from "react";
+import { useCurrentUser } from "@/hooks/use-current-user";
+import { useState } from "react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_app/settings")({
@@ -17,12 +17,11 @@ export const Route = createFileRoute("/_app/settings")({
 function SettingsPage() {
   const [threshold, setThreshold] = useState([70]);
   const [sensitivity, setSensitivity] = useState([60]);
-  const [user, setU] = useState<{ name: string; email: string; role: string } | null>(null);
+  const { profile, role } = useCurrentUser();
+  const user = profile ? { name: profile.full_name, email: profile.email, role: role ?? "" } : null;
   const [notifyEmail, setNotifyEmail] = useState(true);
   const [notifySms, setNotifySms] = useState(false);
   const [notifyPush, setNotifyPush] = useState(true);
-
-  useEffect(() => { setU(getUser()); }, []);
 
   return (
     <div className="space-y-5 max-w-4xl">
