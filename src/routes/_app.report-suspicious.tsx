@@ -55,7 +55,7 @@ function ReportSuspicious() {
         <form onSubmit={submit} className="grid md:grid-cols-2 gap-4">
           <div className="space-y-1.5">
             <Label>Customer name</Label>
-            <Input value={form.customer_name} onChange={(e) => up("customer_name", e.target.value)} placeholder="Adaeze Okafor" />
+            <Input value={form.customer_name} onChange={(e) => up("customer_name", e.target.value)} placeholder="John Doe" />
           </div>
           <div className="space-y-1.5">
             <Label>Meter number</Label>
