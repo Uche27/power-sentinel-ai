@@ -73,7 +73,7 @@ function RegisterPage() {
           <form onSubmit={onSubmit} className="mt-6 space-y-3">
             <div className="space-y-1.5">
               <Label htmlFor="name">Full name</Label>
-              <Input id="name" value={form.name} onChange={(e) => update("name", e.target.value)} placeholder="Chinedu Okafor" />
+              <Input id="name" value={form.name} onChange={(e) => update("name", e.target.value)} placeholder="John Doe" />
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
