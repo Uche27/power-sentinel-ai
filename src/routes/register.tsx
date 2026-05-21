@@ -1,4 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -7,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Zap, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
+import { registerAccount } from "@/lib/account.functions";
 
 export const Route = createFileRoute("/register")({
   head: () => ({ meta: [{ title: "Register — ElectraGuard.AI" }] }),
@@ -18,6 +19,7 @@ type Role = "admin" | "utility_staff";
 
 function RegisterPage() {
   const nav = useNavigate();
+  const createAccount = useServerFn(registerAccount);
   const [busy, setBusy] = useState(false);
   const [form, setForm] = useState({
     name: "", email: "", phone: "", role: "utility_staff" as Role, pwd: "", confirm: "",
@@ -29,8 +31,8 @@ function RegisterPage() {
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!form.name || !form.email.includes("@") || form.pwd.length < 6) {
-      toast.error("Fill all fields. Password must be at least 6 characters.");
+    if (!form.name.trim() || !form.email.includes("@") || form.pwd.length < 8) {
+      toast.error("Fill all fields. Password must be at least 8 characters.");
       return;
     }
     if (form.pwd !== form.confirm) {
@@ -38,18 +40,23 @@ function RegisterPage() {
       return;
     }
     setBusy(true);
-    const { error } = await supabase.auth.signUp({
-      email: form.email,
-      password: form.pwd,
-      options: {
-        emailRedirectTo: `${window.location.origin}/login`,
-        data: { full_name: form.name, phone: form.phone, role: form.role },
-      },
-    });
-    setBusy(false);
-    if (error) { toast.error(error.message); return; }
-    toast.success("Account created. Check your email to confirm, then sign in.");
-    nav({ to: "/login" });
+    try {
+      await createAccount({
+        data: {
+          fullName: form.name,
+          email: form.email,
+          phone: form.phone,
+          role: form.role,
+          password: form.pwd,
+        },
+      });
+      toast.success("Account created. You can sign in now.");
+      nav({ to: "/login" });
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Account could not be created.");
+    } finally {
+      setBusy(false);
+    }
   }
 
   return (
@@ -101,7 +108,7 @@ function RegisterPage() {
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
                 <Label htmlFor="pwd">Password</Label>
-                <Input id="pwd" type="password" value={form.pwd} onChange={(e) => update("pwd", e.target.value)} />
+                <Input id="pwd" type="password" minLength={8} value={form.pwd} onChange={(e) => update("pwd", e.target.value)} />
               </div>
               <div className="space-y-1.5">
                 <Label htmlFor="confirm">Confirm</Label>
