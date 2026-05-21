@@ -1,4 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -7,6 +8,7 @@ import { Eye, EyeOff, Zap, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { getOrCreateCurrentAccount } from "@/lib/account.functions";
 
 export const Route = createFileRoute("/login")({
   head: () => ({ meta: [{ title: "Login — ElectraGuard.AI" }] }),
@@ -15,6 +17,7 @@ export const Route = createFileRoute("/login")({
 
 function LoginPage() {
   const nav = useNavigate();
+  const loadAccount = useServerFn(getOrCreateCurrentAccount);
   const [show, setShow] = useState(false);
   const [email, setEmail] = useState("");
   const [pwd, setPwd] = useState("");
@@ -33,13 +36,16 @@ function LoginPage() {
       toast.error(error.message);
       return;
     }
-    const { data: roles } = await supabase
-      .from("user_roles")
-      .select("role")
-      .eq("user_id", data.user!.id);
-    const role = roles?.[0]?.role ?? "utility_staff";
-    toast.success("Welcome back!");
-    nav({ to: role === "admin" ? "/dashboard" : "/my-activity" });
+    try {
+      const account = await loadAccount();
+      toast.success("Welcome back!");
+      nav({ to: account.role === "admin" ? "/dashboard" : "/my-activity" });
+    } catch (accountError) {
+      await supabase.auth.signOut();
+      toast.error(accountError instanceof Error ? accountError.message : "Unable to load your account access.");
+    } finally {
+      setBusy(false);
+    }
   }
 
   return (
