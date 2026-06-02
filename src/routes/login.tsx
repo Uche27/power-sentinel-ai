@@ -1,5 +1,4 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useServerFn } from "@tanstack/react-start";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -7,8 +6,7 @@ import { Card } from "@/components/ui/card";
 import { Eye, EyeOff, Zap, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
-import { getOrCreateCurrentAccount } from "@/lib/account.functions";
+import { getCurrentAccountRole, signIn, signOut } from "@/lib/auth";
 
 export const Route = createFileRoute("/login")({
   head: () => ({ meta: [{ title: "Login — ElectraGuard.AI" }] }),
@@ -17,7 +15,6 @@ export const Route = createFileRoute("/login")({
 
 function LoginPage() {
   const nav = useNavigate();
-  const loadAccount = useServerFn(getOrCreateCurrentAccount);
   const [show, setShow] = useState(false);
   const [email, setEmail] = useState("");
   const [pwd, setPwd] = useState("");
@@ -30,18 +27,13 @@ function LoginPage() {
       return;
     }
     setBusy(true);
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password: pwd });
-    if (error) {
-      setBusy(false);
-      toast.error(error.message);
-      return;
-    }
     try {
-      const account = await loadAccount();
+      await signIn(email, pwd);
+      const role = await getCurrentAccountRole();
       toast.success("Welcome back!");
-      nav({ to: account.role === "admin" ? "/dashboard" : "/my-activity" });
+      nav({ to: role === "admin" ? "/dashboard" : "/my-activity" });
     } catch (accountError) {
-      await supabase.auth.signOut();
+      await signOut();
       toast.error(
         accountError instanceof Error
           ? accountError.message

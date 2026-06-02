@@ -1,5 +1,4 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useServerFn } from "@tanstack/react-start";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -14,7 +13,7 @@ import {
 import { Zap, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
-import { registerAccount } from "@/lib/account.functions";
+import { signUp } from "@/lib/auth";
 
 export const Route = createFileRoute("/register")({
   head: () => ({ meta: [{ title: "Register — ElectraGuard.AI" }] }),
@@ -25,7 +24,6 @@ type Role = "admin" | "utility_staff";
 
 function RegisterPage() {
   const nav = useNavigate();
-  const createAccount = useServerFn(registerAccount);
   const [busy, setBusy] = useState(false);
   const [form, setForm] = useState({
     name: "",
@@ -52,14 +50,12 @@ function RegisterPage() {
     }
     setBusy(true);
     try {
-      await createAccount({
-        data: {
-          fullName: form.name,
-          email: form.email,
-          phone: form.phone,
-          role: form.role,
-          password: form.pwd,
-        },
+      await signUp({
+        fullName: form.name,
+        email: form.email,
+        phone: form.phone,
+        role: form.role,
+        password: form.pwd,
       });
       toast.success("Account created. You can sign in now.");
       nav({ to: "/login" });
