@@ -13,7 +13,7 @@ import {
 import { Zap, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
-import { signUp } from "@/lib/auth";
+import { getCurrentAccountRole, signUp } from "@/lib/auth";
 
 export const Route = createFileRoute("/register")({
   head: () => ({ meta: [{ title: "Register — ElectraGuard.AI" }] }),
@@ -50,15 +50,21 @@ function RegisterPage() {
     }
     setBusy(true);
     try {
-      await signUp({
+      const result = await signUp({
         fullName: form.name,
         email: form.email,
         phone: form.phone,
         role: form.role,
         password: form.pwd,
       });
-      toast.success("Account created. You can sign in now.");
-      nav({ to: "/login" });
+      if (result.session) {
+        const role = await getCurrentAccountRole();
+        toast.success("Account created. Welcome!");
+        nav({ to: role === "admin" ? "/dashboard" : "/my-activity" });
+      } else {
+        toast.success("Account created. You can sign in now.");
+        nav({ to: "/login" });
+      }
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Account could not be created.");
     } finally {

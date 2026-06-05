@@ -1,6 +1,7 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { getSignedInAccountRole } from "@/lib/auth";
 import {
   Zap, Brain, ShieldAlert, Activity, BarChart3, Bell,
   ArrowRight, Cpu, Database, LineChart, CheckCircle2, Github, Twitter, Linkedin,
@@ -58,6 +59,17 @@ const features = [
 ];
 
 function Landing() {
+  const navigate = useNavigate();
+
+  async function openDashboard() {
+    try {
+      const role = await getSignedInAccountRole();
+      navigate({ to: role === "admin" ? "/dashboard" : role === "utility_staff" ? "/my-activity" : "/login" });
+    } catch {
+      navigate({ to: "/login" });
+    }
+  }
+
   return (
     <div className="min-h-screen bg-background">
       {/* Nav */}
@@ -76,7 +88,7 @@ function Landing() {
           </nav>
           <div className="flex items-center gap-2">
             <Link to="/login"><Button variant="ghost" size="sm">Login</Button></Link>
-            <Link to="/dashboard"><Button size="sm" className="bg-gradient-accent text-white border-0">Dashboard</Button></Link>
+            <Button size="sm" className="bg-gradient-accent text-white border-0" onClick={openDashboard}>Dashboard</Button>
           </div>
         </div>
       </header>
@@ -104,11 +116,9 @@ function Landing() {
                   Get Started <ArrowRight className="ml-1 size-4" />
                 </Button>
               </Link>
-              <Link to="/dashboard">
-                <Button size="lg" variant="outline" className="bg-white/10 border-white/30 text-white hover:bg-white/20 hover:text-white">
-                  View Dashboard
-                </Button>
-              </Link>
+              <Button size="lg" variant="outline" className="bg-white/10 border-white/30 text-white hover:bg-white/20 hover:text-white" onClick={openDashboard}>
+                View Dashboard
+              </Button>
             </div>
           </div>
 
